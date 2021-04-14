@@ -34,7 +34,7 @@ func (c *Client) PushTask(delay int64, body string) error {
 
 	var job delayqueue.Job = delayqueue.Job{
 		Id:    jobId,
-		Delay: delay,
+		Delay: time.Now().Unix() + delay,
 		TTR:   c.Ttr,
 		Topic: c.topic,
 		Body:  body,

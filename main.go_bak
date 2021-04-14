@@ -1,17 +1,42 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"github.com/loticket/delayer/config"
+	"github.com/loticket/delayer/client"
 	"github.com/loticket/delayer/delayqueue"
+	"time"
 )
 
-var configFile = flag.String("f", "./delay-queue", "the config file")
+var configFile = flag.String("f", "./delay-queue.conf", "the config file")
 
 func main() {
 	//初始化配置文件
-	config.Init(&configFile)
+	config.Init(*configFile)
 
 	//启动队列服务
 	delayqueue.Init()
+
+	client := client.NewClient("notice")
+
+	client.PopHandle(func(Topic string,bosy string) error {
+		fmt.Println(time.Now().Format("2006/1/2 15:04:05"))
+		fmt.Println(Topic)
+		fmt.Println(bosy)
+		return nil
+	})
+
+	client.PopTaskTicker()
+	fmt.Println(time.Now().Format("2006/1/2 15:04:05"))
+	//client.PushTask(int64(54),fmt.Sprintf("nums is %d",100))
+	for i:=50;i<100;i++{
+		client.PushTask(int64(i),fmt.Sprintf("nums is %d",i))
+	}
+
+
+	for{
+
+	}
 
 }
