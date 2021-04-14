@@ -1,0 +1,17 @@
+package main
+
+import (
+	"github.com/loticket/delayer/config"
+	"github.com/loticket/delayer/delayqueue"
+)
+
+var configFile = flag.String("f", "./delay-queue", "the config file")
+
+func main() {
+	//初始化配置文件
+	config.Init(&configFile)
+
+	//启动队列服务
+	delayqueue.Init()
+
+}
