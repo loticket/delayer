@@ -65,7 +65,7 @@ func (c *Client) PopTaskTicker() {
 
 //轮询队列获取任务
 func (c *Client) popTask() {
-	var topics []string = []string(c.topic)
+	var topics []string = []string{c.topic}
 	jobInfo, err := delayqueue.Pop(topics)
 	if err != nil || jobInfo == nil {
 		return
