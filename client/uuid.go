@@ -1,8 +1,6 @@
 package client
 
 import (
-	"encoding/binary"
-	"errors"
 	"math/rand"
 	"sync"
 	"time"

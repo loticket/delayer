@@ -2,14 +2,13 @@ package client
 
 import (
 	"errors"
-	"strings"
 	"time"
 
 	"github.com/loticket/delayer/delayqueue"
 )
 
 type Client struct {
-	Ttr int
+	Ttr int64
 	//设置重试次数
 	popHandle func(string, string) error
 
@@ -53,7 +52,7 @@ func (c *Client) PopTaskTicker() {
 	go func() {
 		for {
 			select {
-			case <-c.ticker:
+			case <-c.ticker.C:
 				c.popTask()
 			case <-c.Stop:
 				break
@@ -66,7 +65,7 @@ func (c *Client) PopTaskTicker() {
 
 //轮询队列获取任务
 func (c *Client) popTask() {
-	var topics []string = []string(topic)
+	var topics []string = []string(c.topic)
 	jobInfo, err := delayqueue.Pop(topics)
 	if err != nil || jobInfo == nil {
 		return
@@ -102,7 +101,7 @@ func NewClient(topics string) *Client {
 
 		LoopTime: time.Second * 1,
 
-		ticker: time.NewTimer(time.Second),
+		ticker: time.NewTicker(time.Second),
 
 		Stop: make(chan struct{}),
 	}
